@@ -25,16 +25,10 @@ library(knitr)
 ```
 
 
-
-
-
 # Collaboration
 
 Please indicate who you collaborated with on this assignment: 
-
-
-
-
+Andrew Kim
 
 # Setup
 
@@ -76,7 +70,6 @@ generate_sample <- function(f, n, sigma) {
   # Recall: We don't observe f(x) and epsilon, just (x, y)
   sample <- sample %>% 
     select(x, y)
-  
   return(sample)
 }
 ```
@@ -96,9 +89,53 @@ n_sample <- 10000
 # Computation
 
 ```{r}
+set.seed(100)
+datasetdf2 <- data.frame(matrix(ncol = 2, nrow = n_sample))
+datasetdf2$X1<-.95
+for (i in 1:n_sample){
+  sampled_points <- generate_sample(f,500, sigma)
+  test<-smooth.spline(x=sampled_points$x, y=sampled_points$y, df=2)
+  datasetdf2$X2[i]<-predict(test,test_set)$y
+}
+df2Y<-0.95^2+rnorm(n_sample,mean=0,.3)
+datasetdf2$'Y0'<-df2Y
 
+datasetdf99 <- data.frame(matrix(ncol = 2, nrow = n_sample))
+datasetdf99$X1<-.95
+for (i in 1:n_sample){
+  sampled_points <- generate_sample(f,500, sigma)
+  test<-smooth.spline(x=sampled_points$x, y=sampled_points$y, df=99)
+  datasetdf99$X2[i]<-predict(test,test_set)$y
+}
+df99Y<-0.95^2+rnorm(n_sample,mean=0,.3)
+datasetdf99$'Y0'<-df99Y
+
+
+MSEdf2 <- mean(((as.numeric(datasetdf2$X2)) - (datasetdf2$Y0))^2)
+MSEdf99 <- mean(((as.numeric(datasetdf99$X2)) - (datasetdf99$Y0))^2)
+
+biasSQdf2 <- mean(as.numeric(datasetdf2$X2) - 0.95^2)^2
+biasSQdf99 <- mean(as.numeric(datasetdf99$X2) - 0.95^2)^2
+
+varDF2 <- var(as.numeric(datasetdf2$X2))
+varDF99 <- var(as.numeric(datasetdf99$X2))
+
+sigma2 <- sigma^2
+sigma99 <- sigma^2
 ```
 
+```{r,echo=F}
+table <- data.frame(matrix(ncol = 5, nrow = 2))
+rownames(table)<-c("df2","df99")
+colnames(table)<-c("MSE","Bias^2","Var","Irreducible","Sum")
+table$MSE<-c(MSEdf2,MSEdf99)
+table$'Bias^2'<-c(biasSQdf2,biasSQdf99)
+table$Var<-c(varDF2,varDF99)
+table$Irreducible<-c(sigma2,sigma99)
+table$Sum<-c(biasSQdf2+varDF2+sigma2,biasSQdf99+varDF99+sigma99)
+
+knitr::kable(table, digits = 4)
+```
 
 # Tables
 
@@ -113,9 +150,7 @@ output tables comparing:
 |----:|------------:|-----:|-----------:|-----:|
 |     X|           X  |     X |      X |         X |
 
-where `sum = bias_squared + var + irreducible`. You can created cleanly formatted tables like the one above by piping a data frame into `knitr::kable(digits=4)`.
-
-
+where `sum = bias_squared + var + irreducible`. You can created cleanly formatted tables like the one above by piping a data frame into `knitr::kable`.
 
 
 # Analysis
@@ -131,6 +166,6 @@ $x$ in this example, and not just for $$\mbox{MSE}\left[\widehat{f}(x_0)\right]
 
 **Answers**:
 
-1.
-1.
-1.
+1. If our MSE isn't equal to the sum of our Bias^2+Var+Sigma^2, we are in trouble.  If these don't add up something is wrong.  Moreover, the variance for the df=2 should essentially be 0 and the bias for the df=99 should essentially be 0.
+1. Instead of just evaluating for a point, coule we would evaluate over the whole interval by fitting a curve and then using its equation to calculate our score statistics? Something to do
+1. df=2 because the df99 value might be more of an outlier in general (extreme value of y hat) whereas if we just use df=2 we are guaranteed to get a value that is representative of the data as as whole, and therefore can't be that bad.  Really comes down to worst-case scenario here: df99 could be really bad, df2 will always be average.
