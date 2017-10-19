@@ -1,6 +1,6 @@
 ---
 title: "STAT/MATH 495: Problem Set 06"
-author: "WRITE YOUR NAME HERE"
+author: "Jeff Lancaster"
 date: "2017-10-17"
 output:
   html_document:
@@ -167,5 +167,5 @@ $x$ in this example, and not just for $$\mbox{MSE}\left[\widehat{f}(x_0)\right]
 **Answers**:
 
 1. If our MSE isn't equal to the sum of our Bias^2+Var+Sigma^2, we are in trouble.  If these don't add up something is wrong.  Moreover, the variance for the df=2 should essentially be 0 and the bias for the df=99 should essentially be 0.
-1. Instead of just evaluating for a point, coule we would evaluate over the whole interval by fitting a curve and then using its equation to calculate our score statistics? Something to do
+1. Instead of just evaluating for a point, coule we would evaluate over the whole interval by fitting a curve using multiple values of x (like we did for x=0.95 above).  Then, using the data from all of those new x values we calculated, we could find the expected difference between y and y_hat in an attempt to fit a function that models the underlying relationship between the two.
 1. df=2 because the df99 value might be more of an outlier in general (extreme value of y hat) whereas if we just use df=2 we are guaranteed to get a value that is representative of the data as as whole, and therefore can't be that bad.  Really comes down to worst-case scenario here: df99 could be really bad, df2 will always be average.
