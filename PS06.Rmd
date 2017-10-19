@@ -59,7 +59,7 @@ data" function. Random in terms of both:
 * (New) the predictor x (uniform on [0,1])
 * the amount of noise $\epsilon$
 
-```{r}
+```{r,echo=F}
 generate_sample <- function(f, n, sigma) {
   sample <- data_frame(
     x = runif(n = n, min = 0, max = 1),
