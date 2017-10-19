@@ -59,7 +59,7 @@ data" function. Random in terms of both:
 * (New) the predictor x (uniform on [0,1])
 * the amount of noise $\epsilon$
 
-```{r,echo=F}
+```{r,echo=T}
 generate_sample <- function(f, n, sigma) {
   sample <- data_frame(
     x = runif(n = n, min = 0, max = 1),
@@ -124,7 +124,7 @@ sigma2 <- sigma^2
 sigma99 <- sigma^2
 ```
 
-```{r,echo=F}
+```{r,echo=T}
 table <- data.frame(matrix(ncol = 5, nrow = 2))
 rownames(table)<-c("df2","df99")
 colnames(table)<-c("MSE","Bias^2","Var","Irreducible","Sum")
